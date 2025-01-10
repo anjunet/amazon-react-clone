@@ -1,7 +1,31 @@
 import React from "react";
+import "./NotFound.css";
+import { Link } from "react-router-dom";
 
 const NotFound = () => {
-  return <div>NotFound</div>;
+  return (
+    <div className="not_found">
+      <Link to={"/"}>
+        <div>
+          <img
+            className="img_top"
+            src="https://images-na.ssl-images-amazon.com/images/G/01/error/title._TTD_.png"
+            alt=""
+          />
+        </div>
+      </Link>
+      <Link
+        to={"https://www.aboutamazon.com/workplace/meet-the-dogs-of-amazon"}
+      >
+        <div>
+          <img
+            src="https://images-na.ssl-images-amazon.com/images/G/01/error/10._TTD_.jpg"
+            alt=""
+          />
+        </div>
+      </Link>
+    </div>
+  );
 };
 
 export default NotFound;
