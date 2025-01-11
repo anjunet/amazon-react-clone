@@ -1,7 +1,8 @@
 import React from "react";
+import Wrapper from "../components/Helpers/Wrapper";
 
 const Auth = () => {
-  return <div>Auth</div>;
+  return <Wrapper>Auth</Wrapper>;
 };
 
 export default Auth;
