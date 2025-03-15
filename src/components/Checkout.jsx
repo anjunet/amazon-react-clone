@@ -7,6 +7,7 @@ import Subtotal from "./Subtotal";
 const Checkout = () => {
   const shoppingContext = useContext(ShoppingContext);
   const { basket, user } = shoppingContext;
+
   return (
     <div className="checkout">
       <div className="checkout_left">
@@ -16,12 +17,12 @@ const Checkout = () => {
           alt=""
         />
         <div>
-          <h3>Hello,{user?.email}</h3>
+          <h3>Hello, {user?.email}</h3>
           <h2 className="checkout_title">Your Shopping Basket</h2>
 
-          {basket.map((item) => (
+          {basket.map((item, index) => (
             <CheckoutProduct
-            key={item.id}
+              key={item.id || index}
               id={item.id}
               title={item.title}
               image={item.image}
@@ -31,7 +32,9 @@ const Checkout = () => {
           ))}
         </div>
       </div>
-      <div className="checkout_right"><Subtotal /></div>
+      <div className="checkout_right">
+        <Subtotal />
+      </div>
     </div>
   );
 };

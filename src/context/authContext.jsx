@@ -1,43 +1,57 @@
-import { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { auth } from "../firebase";
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
-const AuthContext = createContext({
-  isLoggedIn: false,
-  onLogout: () => {},
-  onLogin: (email, password) => {},
-});
+const AuthContext = createContext();
 
-export const AuthContextProvider = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const userInfo = localStorage.getItem("isLoggedIn");
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
 
-    if (userInfo === "1") {
-      setIsLoggedIn(true);
-    }
+    return unsubscribe;
   }, []);
 
-  const loginHandler = (email, password) => {
-    localStorage.setItem("isLoggedIn", "1");
-    setIsLoggedIn(true);
+  const signUp = async (email, password) => {
+    try {
+      setError("");
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      setUser(userCredential.user);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
-  const logoutHandler = (email, password) => {
-    localStorage.removeItem("isLoggedIn");
-    setIsLoggedIn(false);
+  const logIn = async (email, password) => {
+    try {
+      setError("");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      setUser(userCredential.user);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const logOut = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn: isLoggedIn,
-        onLogout: logoutHandler,
-        onLogin: loginHandler,
-      }}
-    >
-      {props.children}
+    <AuthContext.Provider value={{ user, signUp, logIn, logOut, loading, error }}>
+      {children}
     </AuthContext.Provider>
   );
 };
-
-export default AuthContext;

@@ -6,14 +6,14 @@ import { auth } from "../firebase";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const signIn = (e) => {
     e.preventDefault();
     auth
       .signInWithEmailAndPassword(email, password)
-      .then((auth) => {
-        navigate("/"); 
+      .then(() => {
+        navigate("/");
       })
       .catch((error) => alert(error.message));
   };
@@ -22,10 +22,8 @@ const Login = () => {
     e.preventDefault();
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then((auth) => {
-        if (auth) {
-          navigate("/"); 
-        }
+      .then(() => {
+        navigate("/");
       })
       .catch((error) => alert(error.message));
   };
@@ -42,7 +40,7 @@ const Login = () => {
       <div className="login-container">
         <h1>Sign-in</h1>
         <form>
-          <h5>E-mail</h5>
+          <h5>Email</h5>
           <input
             type="text"
             value={email}
@@ -54,7 +52,11 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit" className="login-signInButton" onClick={signIn}>
+          <button
+            type="submit"
+            className="login-signInButton"
+            onClick={signIn}
+          >
             Sign In
           </button>
         </form>
